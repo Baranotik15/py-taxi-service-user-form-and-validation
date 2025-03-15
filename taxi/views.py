@@ -1,9 +1,11 @@
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import UpdateView
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from .forms import DriverLicenseUpdateForm, DriverCreateForm
 from .models import Driver, Car, Manufacturer
 
 
@@ -91,7 +93,7 @@ class DriverDetailView(LoginRequiredMixin, generic.DetailView):
 
 class DriverCreateView(LoginRequiredMixin, generic.CreateView):
     model = Driver
-    fields = "__all__"
+    form_class = DriverCreateForm
     success_url = reverse_lazy("taxi:driver-list")
 
 
@@ -104,4 +106,17 @@ class DriverUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class DriverDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Driver
+    queryset = Driver.objects.all().prefetch_related("cars__manufacturer")
     success_url = reverse_lazy("taxi:driver-list")
+
+
+class DriverLicenseUpdateView(LoginRequiredMixin, UpdateView):
+    model = Driver
+    form_class = DriverLicenseUpdateForm
+    template_name = "taxi/driver_license_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy("taxi:driver-detail", kwargs={"pk": self.object.pk})
+
+    def get_queryset(self):
+        return Driver.objects.all()
