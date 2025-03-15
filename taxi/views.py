@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
+from django.views.generic.base import View
 from django.views.generic.edit import UpdateView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -120,3 +121,23 @@ class DriverLicenseUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return Driver.objects.all()
+
+
+class AssignDriverToCar(LoginRequiredMixin, View):
+
+    def post(self, request, car_pk):
+        car = get_object_or_404(Car, pk=car_pk)
+        user = request.user
+        if user not in car.drivers.all():
+            car.drivers.add(user)
+        return redirect('taxi:car-detail', pk=car.pk)
+
+
+class RemoveDriverFromCar(LoginRequiredMixin, View):
+
+    def post(self, request, car_pk):
+        car = get_object_or_404(Car, pk=car_pk)
+        user = request.user
+        if user in car.drivers.all():
+            car.drivers.remove(user)
+        return redirect('taxi:car-detail', pk=car.pk)
