@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import Driver
+from .models import Driver, Car
 
 
 def validate_license_number(license_number: str):
@@ -30,3 +30,15 @@ class DriverCreateForm(DriverLicenseUpdateForm):
     class Meta(DriverLicenseUpdateForm.Meta):
         model = Driver
         fields = ["username", "first_name", "last_name", "license_number", "password"]
+
+
+class CarCreateForm(forms.ModelForm):
+    class Meta:
+        model = Car
+        fields = ['model', 'manufacturer', 'drivers']
+
+    drivers = forms.ModelMultipleChoiceField(
+        queryset=Driver.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False
+    )
