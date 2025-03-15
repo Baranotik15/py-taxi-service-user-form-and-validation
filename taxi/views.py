@@ -98,7 +98,6 @@ class DriverCreateView(LoginRequiredMixin, generic.CreateView):
     success_url = reverse_lazy("taxi:driver-list")
 
 
-
 class DriverUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Driver
     fields = "__all__"
@@ -117,7 +116,10 @@ class DriverLicenseUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "taxi/driver_license_update.html"
 
     def get_success_url(self):
-        return reverse_lazy("taxi:driver-detail", kwargs={"pk": self.object.pk})
+        return reverse_lazy(
+            "taxi:driver-detail",
+            kwargs={"pk": self.object.pk}
+        )
 
     def get_queryset(self):
         return Driver.objects.all()
@@ -130,7 +132,7 @@ class AssignDriverToCar(LoginRequiredMixin, View):
         user = request.user
         if user not in car.drivers.all():
             car.drivers.add(user)
-        return redirect('taxi:car-detail', pk=car.pk)
+        return redirect("taxi:car-detail", pk=car.pk)
 
 
 class RemoveDriverFromCar(LoginRequiredMixin, View):
@@ -140,4 +142,4 @@ class RemoveDriverFromCar(LoginRequiredMixin, View):
         user = request.user
         if user in car.drivers.all():
             car.drivers.remove(user)
-        return redirect('taxi:car-detail', pk=car.pk)
+        return redirect("taxi:car-detail", pk=car.pk)

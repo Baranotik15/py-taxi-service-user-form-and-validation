@@ -29,13 +29,23 @@ class DriverLicenseUpdateForm(forms.ModelForm):
 class DriverCreateForm(DriverLicenseUpdateForm):
     class Meta(DriverLicenseUpdateForm.Meta):
         model = Driver
-        fields = ["username", "first_name", "last_name", "license_number", "password"]
+        fields = [
+            "username",
+            "first_name",
+            "last_name",
+            "license_number",
+            "password"
+        ]
 
 
 class CarCreateForm(forms.ModelForm):
     class Meta:
         model = Car
-        fields = ['model', 'manufacturer', 'drivers']
+        fields = [
+            "model",
+            "manufacturer",
+            "drivers"
+        ]
 
     drivers = forms.ModelMultipleChoiceField(
         queryset=Driver.objects.all(),
