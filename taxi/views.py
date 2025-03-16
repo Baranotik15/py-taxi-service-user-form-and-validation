@@ -121,9 +121,6 @@ class DriverLicenseUpdateView(LoginRequiredMixin, UpdateView):
             kwargs={"pk": self.object.pk}
         )
 
-    def get_queryset(self):
-        return Driver.objects.all()
-
 
 class AssignDriverToCar(LoginRequiredMixin, View):
 
