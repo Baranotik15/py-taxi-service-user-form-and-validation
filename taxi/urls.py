@@ -12,7 +12,6 @@ from .views import (
     DriverCreateView,
     DriverUpdateView,
     DriverDeleteView,
-    DriverLicenseUpdateView,
     ManufacturerListView,
     ManufacturerCreateView,
     ManufacturerUpdateView,
